@@ -1,12 +1,19 @@
 // 直接用 fetch 打 OpenAI Chat Completions，不另外裝 SDK。
 import type { Scenario } from "./scenarios";
 
-const MODEL = "gpt-4o-mini";
+// 對話回覆：品質差不多，用便宜的模型
+const CHAT_MODEL = "gpt-4o-mini";
+// 糾正文法、更好完整回答：抓錯更準、解說更清楚，也比較快
+const CORRECTION_MODEL = "gpt-5.4-mini";
 
 type ChatMessage = { role: "system" | "user" | "assistant"; content: string };
 
 /** 打 OpenAI 並要求回傳 JSON 物件，回傳 parse 後的結果 */
-async function chatJSON(messages: ChatMessage[], temperature: number): Promise<Record<string, unknown>> {
+async function chatJSON(
+  model: string,
+  messages: ChatMessage[],
+  temperature: number
+): Promise<Record<string, unknown>> {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) throw new Error("請在 .env.local 設定 OPENAI_API_KEY");
 
@@ -17,7 +24,7 @@ async function chatJSON(messages: ChatMessage[], temperature: number): Promise<R
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      model: MODEL,
+      model,
       messages,
       temperature,
       response_format: { type: "json_object" },
@@ -74,7 +81,7 @@ export async function getTutorReply(
     });
   }
 
-  const json = await chatJSON(messages, 0.8);
+  const json = await chatJSON(CHAT_MODEL, messages, 0.8);
   return str(json.reply) || str(json.raw);
 }
 
@@ -98,6 +105,7 @@ const ISSUE_TYPES = ["grammar", "vocabulary", "spelling", "word-choice", "natura
 
 export async function checkGrammar(sentence: string, context: string): Promise<GrammarResult> {
   const json = await chatJSON(
+    CORRECTION_MODEL,
     [
       {
         role: "system",
@@ -159,6 +167,7 @@ export async function suggestBetterAnswer(
   level: string
 ): Promise<BetterAnswerResult> {
   const json = await chatJSON(
+    CORRECTION_MODEL,
     [
       {
         role: "system",
