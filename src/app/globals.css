@@ -1,26 +1,190 @@
 @import "tailwindcss";
 
+/* dark: 前綴跟著 <html class="dark"> 走（手動切換），不是只看系統設定 */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ---------- 色彩 tokens：淺色（暖紙張） ---------- */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #f7f5f0;
+  --surface: #ffffff;
+  --surface-2: #f0ede6;
+  --line: #e5e0d6;
+  --line-strong: #d3ccbf;
+  --fg: #1b1915;
+  --muted: #6d675d;
+  --faint: #9a9488;
+
+  --accent: #4338ca;
+  --accent-hover: #3730a3;
+  --accent-fg: #ffffff;
+  --accent-soft: #ecebfb;
+  --accent-line: #c9c6f3;
+
+  --warn-bg: #fdf6e6;
+  --warn-line: #efdcae;
+  --warn-fg: #8a5a00;
+  --tip-bg: #eef4fd;
+  --tip-line: #cddff6;
+  --tip-fg: #1d5aa6;
+  --ok-bg: #ebf6ef;
+  --ok-line: #c3e5d0;
+  --ok-fg: #1d7646;
+  --danger: #c0352b;
+  --danger-bg: #fdeeec;
+
+  --shadow-color: 30 25 15;
+  color-scheme: light;
+}
+
+/* ---------- 深色（墨色） ---------- */
+:root.dark {
+  --bg: #0d0d0f;
+  --surface: #161619;
+  --surface-2: #1e1e22;
+  --line: #29292f;
+  --line-strong: #3a3a42;
+  --fg: #eceae5;
+  --muted: #a09c94;
+  --faint: #6f6c66;
+
+  --accent: #8f8bff;
+  --accent-hover: #a7a4ff;
+  --accent-fg: #0d0d0f;
+  --accent-soft: rgba(143, 139, 255, 0.13);
+  --accent-line: rgba(143, 139, 255, 0.35);
+
+  --warn-bg: rgba(242, 184, 75, 0.07);
+  --warn-line: rgba(242, 184, 75, 0.22);
+  --warn-fg: #f2c46b;
+  --tip-bg: rgba(99, 162, 245, 0.07);
+  --tip-line: rgba(99, 162, 245, 0.24);
+  --tip-fg: #91bcf6;
+  --ok-bg: rgba(64, 200, 140, 0.08);
+  --ok-line: rgba(64, 200, 140, 0.24);
+  --ok-fg: #74dcaa;
+  --danger: #f2877d;
+  --danger-bg: rgba(242, 135, 125, 0.1);
+
+  --shadow-color: 0 0 0;
+  color-scheme: dark;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-fg: var(--accent-fg);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-line: var(--accent-line);
+  --color-warn-bg: var(--warn-bg);
+  --color-warn-line: var(--warn-line);
+  --color-warn-fg: var(--warn-fg);
+  --color-tip-bg: var(--tip-bg);
+  --color-tip-line: var(--tip-line);
+  --color-tip-fg: var(--tip-fg);
+  --color-ok-bg: var(--ok-bg);
+  --color-ok-line: var(--ok-line);
+  --color-ok-fg: var(--ok-fg);
+  --color-danger: var(--danger);
+  --color-danger-bg: var(--danger-bg);
+
+  --font-sans: var(--font-geist-sans), "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-display: var(--font-instrument-serif), "Songti TC", "Noto Serif TC", serif;
+
+  --shadow-soft: 0 1px 2px rgb(var(--shadow-color) / 0.04), 0 4px 16px -4px rgb(var(--shadow-color) / 0.08);
+  --shadow-lift: 0 2px 4px rgb(var(--shadow-color) / 0.04), 0 16px 40px -12px rgb(var(--shadow-color) / 0.18);
+
+  --animate-rise: rise 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  --animate-pop: pop 0.25s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: translateY(4px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes typing {
+  0%,
+  60%,
+  100% {
+    opacity: 0.25;
+    transform: translateY(0);
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-feature-settings: "ss01", "cv11";
+}
+
+::selection {
+  background: var(--accent-soft);
+  color: var(--fg);
+}
+
+/* 切換主題時不要每個元素都跑 transition，只在切換瞬間淡入 */
+.theme-switching,
+.theme-switching * {
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease !important;
+}
+
+.typing-dot {
+  animation: typing 1.2s infinite ease-in-out;
+}
+.typing-dot:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.typing-dot:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+/* 細緻的紙張顆粒背景（landing 用） */
+.bg-grain {
+  background-image: radial-gradient(rgb(var(--shadow-color) / 0.05) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
